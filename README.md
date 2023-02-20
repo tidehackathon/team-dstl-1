@@ -1,2 +1,3 @@
-# team-dstl-1
-DSTL-1
+# Dstl (Team 1)
+
+Team from the Defence Science and Technology Laboratory (Dstl) in the UK.
