@@ -25,3 +25,17 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "frames" {
     }
   }
 }
+
+resource "aws_s3_bucket" "ref" {
+  bucket = "${var.prefix}-ref"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "ref" {
+  bucket = aws_s3_bucket.ref.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "AES256"
+    }
+  }
+}

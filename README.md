@@ -21,3 +21,24 @@ The following components are created as part of our infrastructure, which is hos
 
 * `videos` bucket - an S3 bucket containing the original raw data
 * `frames` bucket - an S3 bucket containing frames extracted from each video
+* `ref` bucket - an S3 bucket containing reference data, including reference mapping
+
+## Reference Mapping
+
+Reference mapping is extracted from OSM (OpenStreet Maps) and converted to a GeoTIFF for features of interest (as extracted by the segmentation stage). An example of extracting highway features for a 0.2 x 0.25 degree box at 0.00001 degree resolution is as follows:
+
+```
+# Filter to features
+osmium tags-filter europe-latest.osm.pbf wr/highway -o highways.osm.pbf
+
+# Flatten to GeoTIFF, ignoring points
+gdal_rasterize -burn 255 highways.osm.pbf highways.gtiff -l lines -l multilinestrings -l multipolygons -f "GTiff" -te 15.0 28.45 15.2 28.7 -tr 0.00001 0.00001
+```
+
+ The features, and the associated OSM tags, are:
+
+* Buildings (`wr/building`)
+* Roads (`wr/highway`)
+* Water (`wr/water`)
+
+Anything not covered by one of those layers is assumed to be land or vegetation (the other categories of the segmentation).
