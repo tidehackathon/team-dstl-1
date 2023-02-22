@@ -10,7 +10,7 @@ def extract_metadata(log, extract):
 
     while True:
         try:
-            m = mlog.recv_match(type=['NAV_CONTROLLER_OUTPUT', 'ATTITUDE', 'MOUNT_STATUS', 'AHRS3', 'AHRS2'])
+            m = mlog.recv_match(type=['VFR_HUD', 'ATTITUDE', 'MOUNT_STATUS', 'AHRS3', 'AHRS2', 'GLOBAL_POSITION_INT'])
             if m is None:
                 break
 
@@ -18,8 +18,8 @@ def extract_metadata(log, extract):
             if timestamp > extract:
                 break
 
-            if isinstance(m, mavutil.mavlink.MAVLink_nav_controller_output_message):
-                extract_dict['nav_bearing'] = m.nav_bearing
+            if isinstance(m, mavutil.mavlink.MAVLink_vfr_hud_message):
+                extract_dict['heading'] = m.heading
             elif isinstance(m, mavutil.mavlink.MAVLink_attitude_message):
                 extract_dict['yaw'] = m.yaw
                 extract_dict['pitch'] = m.pitch
@@ -30,6 +30,9 @@ def extract_metadata(log, extract):
                 extract_dict['camera_c'] = m.pointing_c     #    input_c : yaw(deg*100) or alt (in cm) depending on mount mode (int32_t)
             elif isinstance(m, mavutil.mavlink.MAVLink_ahrs3_message) or isinstance(m, mavutil.mavlink.MAVLink_ahrs2_message):
                 extract_dict['altitude'] = m.altitude
+            elif isinstance(m, mavutil.mavlink.MAVLink_global_position_int_message):
+                extract_dict['_lat'] = m.lat
+                extract_dict['_lon'] = m.lon
             else:
                 print(f"WARNING: Unexpected type {type(m)}")
 
