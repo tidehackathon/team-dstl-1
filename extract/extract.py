@@ -38,16 +38,25 @@ def extract_metadata(log, extract):
 
         except Exception as e:
             print(f"ERROR: {str(e)}")
-            break
+            return None
     
     return extract_dict
         
 
-def extract_frame(input_video, video_offset, extract, output_image):
+def extract_frame(input_video, offset):
     try:
         video = cv2.VideoCapture(input_video)
-        video.set(cv2.CAP_PROP_POS_MSEC, (extract-video_offset)*1000)
+        video.set(cv2.CAP_PROP_POS_MSEC, offset*1000)
         _, image = video.read()
+        return image
+    except Exception as e:
+        print(f"ERROR: {str(e)}")
+        return None
+
+
+def save_frame(input_video, video_offset, extract, output_image):
+    try:
+        image = extract_frame(input_video, extract-video_offset)
         cv2.imwrite(output_image, image)
     except Exception as e:
         print(f"ERROR: {str(e)}")
@@ -74,5 +83,5 @@ if __name__=="__main__":
     with open(args.extracted + ".json", 'w') as f:
         json.dump(metadata, f)
 
-    extract_frame(args.video, args.offset, args.extract, args.extracted + ".jpg")
+    save_frame(args.video, args.offset, args.extract, args.extracted + ".jpg")
     
