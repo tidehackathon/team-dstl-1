@@ -17,7 +17,7 @@ The following arguments can be passed to the script:
 ## Example
 
 ```
-python3 extract.py -v "/home/james/data/videos/sample8/sample8/logitech_08_47_29.avi" \
+python3 extract.py -v "/home/james/data/videos/sample8/sample8/logitech_08_47_29.avi.mp4" \
                    -o 1676450849 \
                    -l "/home/james/data/videos/sample8/logs/2023-02-15 10-35-41.tlog" \
                    -x 1676452324
