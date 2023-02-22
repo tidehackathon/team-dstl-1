@@ -11,7 +11,9 @@ from torchgeo.models import resnet18, ResNet18_Weights
 from torchvision.transforms.functional import to_tensor
 
 class LandcoverAITriplet(Dataset):
-    """Landcover AI Dataset read to return appropiate for triplet loss
+    """Landcover AI Dataset read to return appropiate for triplet loss.
+    Takes two random patches from the large orthophotos, first patch is copied to make pos and anchor.
+    Second patch is used as neg.
     
     Dataset features:
     * land cover from Poland, Central Europe

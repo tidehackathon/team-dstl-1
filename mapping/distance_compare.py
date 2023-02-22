@@ -8,12 +8,12 @@ import random
 
 import torchvision.transforms.functional as F
 
-def find_closest_dist(map_img, patch_img, patch_size=256, stride_size=128, process=None, return_patches=False):
+def find_closest_dist(map_img, patch_imgs, patch_size=256, stride_size=128, process=None, return_patches=False):
     '''
     Euclidiean distance between an image and a patches of a larger image
     Input:
         - map_img: large image as np arrary
-        - patch_img: small image as np arrary
+        - patch_img: list of small images as np arrary
         - patch_size=256: optional
         - stride_size=128: optional 
         - process=None: optional, function/class to process images if needed, takes in patch and patch and returns this
@@ -22,25 +22,27 @@ def find_closest_dist(map_img, patch_img, patch_size=256, stride_size=128, proce
     '''
     # split map into patches
     map_img = F.to_tensor(map_img).unsqueeze(0)
-    patch_img = F.to_tensor(patch_img)
     patches = map_img.unfold(2, patch_size, stride_size).unfold(3, patch_size, stride_size)
     num_images_x = patches.shape[-3]
     num_images_y = patches.shape[-4]
-
+    
     # compare patches to map
     euc_dist = torch.nn.PairwiseDistance()
-    distances = torch.zeros((num_images_y, num_images_x))
-
-    for i in range(num_images_x):
-        for j in range(num_images_y):
-                patch_image = patch_img.clone()
-                patch = patches[0, 0, j, i]
-                if process:
-                    # this where smarter embedding can go
-                    patch_image, patch = process(patch_image, patch)
-                dist = euc_dist(patch_image, patch).mean().item()
-                distances[j, i] = dist
-
+    distances = torch.zeros((len(patch_imgs), num_images_y, num_images_x))
+    for n, patch_img in enumerate(patch_imgs):
+        patch_img = F.to_tensor(patch_img)
+        for i in range(num_images_x):
+            for j in range(num_images_y):
+                    patch_image = patch_img.clone()
+                    patch = patches[0, 0, j, i]
+                    if process:
+                        # this where smarter embedding can go
+                        patch_image, patch = process(patch_image, patch)
+                    dist = euc_dist(patch_image, patch).mean().item()
+                    distances[n, j, i] = dist
+    
+    # sum distances over first axis
+    distances = torch.sum(distances, 0)
     # identify closest
     amin = distances.argmin()
     predx = amin%num_images_x
@@ -78,7 +80,7 @@ if __name__=='__main__':
     print(x, y)
 
     # get comparisons
-    predx, predy, distances = find_closest_dist(map_image, patch_img, patch_size=256, stride_size=128)
+    predx, predy, distances = find_closest_dist(map_image, [patch_img], patch_size=256, stride_size=128)
     print(predx, predy)
     
 
