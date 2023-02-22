@@ -1,0 +1,33 @@
+######### UAV #########
+
+came from front line - why were we right
+EW causes UAV to lose all communication with drone (video, control, coms, gps links)
+visual navigation without that!
+
+UAV top down videos and telemtry logs, nothing front line there
+GPS in log files
+consider control, video, navigation
+
+sample 8 only openable with vlc (shit?)
+
+top down frames, rural? example frames looked rural
+
+visual based navigation to any open sourced autopilot or emulate instructions to flight controller (harder there)
+
+precision, versatiity, open source ideally but not required
+
+UAV logviewer, PX4, unknown
+
+7 teams on UAV - 5 go to second round
+
+judged: (1-5), 3 is met task
+    understood problem
+        getting extra data is worth points, can it be used real time/ offline
+    delivered innovation
+        be creative
+    viability
+        can we get it to mvp point
+    documentation - tidepedia and github and azure (we need a documentated exemption to that?)
+        big stress on this on tidepedia
+    demo
+        no powerpoint
