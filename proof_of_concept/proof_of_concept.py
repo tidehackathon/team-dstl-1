@@ -10,6 +10,9 @@ import extract
 sys.path.append('../download')
 import tiles_to_tiff as t3
 
+sys.path.append('../offset_correction')
+import offset_correction
+
 def get_start_location(log, timestamp):
     m = extract.extract_metadata(log, timestamp)
 
