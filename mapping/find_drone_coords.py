@@ -1,7 +1,5 @@
 import numpy as np
 import torch
-import torchvision
-import torchgeo
 import os
 import cv2
 import matplotlib.pyplot as plt
