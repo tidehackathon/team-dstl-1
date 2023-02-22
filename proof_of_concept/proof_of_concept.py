@@ -105,10 +105,10 @@ if __name__=="__main__":
         (pred_lat, pred_lon), = fdc.drone_image_to_coords(np.asarray(image), rasterio.open("./merged.tif"))
 
         # Calculate offset to drone location
-        corrected_location = offset_correction.correct_offset(pred_lat, pred_lon)
+        corrected_lat, corrected_lon = offset_correction.correct_offset(pred_lat, pred_lon, drone_metadata["heading"], drone_metadata["pitch"], drone_metadata["roll"], drone_metadata["altitude"], config["ground_altitude"], pred_lat, drone_metadata["camera_a"], drone_metadata["camera_b"], drone_metadata["camera_c"])
 
         # Save offset location into predicted
-        predicted.append(corrected_location)
+        predicted.append((corrected_lon, corrected_lat))
 
         # Save ground truth/prediction to CSV
         with open("output.csv", "a") as f:
