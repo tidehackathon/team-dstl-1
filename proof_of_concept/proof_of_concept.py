@@ -1,5 +1,6 @@
 import argparse
 import json
+import simplekml
 import sys
 import time
 
@@ -48,6 +49,17 @@ if __name__=="__main__":
         f.write("offset,predicted_lon,predicted_lat,truth_lon,truth_lat\n")
         f.write(f"{time_offsets[0]},{predicted[0][0]},{predicted[0][1]},{ground_truth[0][0]},{ground_truth[0][1]}\n")
 
+    # Create empty KML
+    kml = simplekml.Kml(name='Proof of Concept')
+    gt_line = kml.newlinestring(name="Ground Truth", coords=ground_truth)
+    gt_line.style.linestyle.color = simplekml.Color.green
+    gt_line.style.linestyle.width = 10
+
+    pred_line = kml.newlinestring(name="Predicted", coords=predicted)
+    pred_line.style.linestyle.color = simplekml.Color.red
+    pred_line.style.linestyle.width = 10
+
+    kml.save("output.kml")
 
     while True:
         # Get latest data, using real time offset from when we started
@@ -68,7 +80,7 @@ if __name__=="__main__":
             break
 
         # Save ground truth location
-        ground_truth.append((logfile_coord_to_dec(drone_metadata["_lat"]), logfile_coord_to_dec(drone_metadata["_lon"])))
+        ground_truth.append((logfile_coord_to_dec(drone_metadata["_lon"]), logfile_coord_to_dec(drone_metadata["_lat"])))
         
         # Get mapping
         bounds = [
@@ -93,5 +105,8 @@ if __name__=="__main__":
         # Save ground truth/prediction to CSV
         with open("output.csv", "a") as f:
             f.write(f"{offset},{predicted[-1][0]},{predicted[-1][1]},{ground_truth[-1][0]},{ground_truth[-1][1]}\n")
-
-    # TODO: Create plot/image showing difference between ground truth and predicted
+        
+        # Save ground truth/prediction to KML
+        gt_line.coords = ground_truth
+        pred_line.coords = predicted
+        kml.save("output.kml")

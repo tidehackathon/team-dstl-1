@@ -73,8 +73,8 @@ def convert(tile_source, output_file, bounding_box, zoom):
                 tile = georeference_raster_tile(x, y, zoom, png_path)
 
                 tiles.append(tile)
-            except OSError:
-                print(f"Error, failed to get {x},{y}")
+            except OSError as e:
+                print(f"Error ({str(e)}), failed to get {x},{y}")
                 pass
 
     print("Resolving and georeferencing of raster tiles complete")
