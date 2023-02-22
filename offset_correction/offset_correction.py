@@ -1,6 +1,4 @@
 import numpy as np
-import json
-import pandas as pd
 import math
 
 def correct_offset(uncorrected_lat, uncorrected_lon, heading, pitch, roll, altitude, altitude_offset, latitude, a, b, c):
@@ -13,7 +11,7 @@ def correct_offset(uncorrected_lat, uncorrected_lon, heading, pitch, roll, altit
 
     # The camera's attitude is relative to the platform
     combined_pitch = pitch + math.radians(camera_pitch)
-    combined_roll = roll + math.radians(camera_roll)
+    #combined_roll = roll + math.radians(camera_roll)
     combined_heading = heading + camera_yaw
 
     # Calculate theta (pitch relative to vertical down)
