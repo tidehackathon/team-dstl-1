@@ -3,7 +3,7 @@ import os
 from tile_convert import bbox_to_xyz, tile_edges
 from osgeo import gdal
 
-cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
+cache_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), 'cache'))
 
 def fetch_tile(x, y, z, tile_source):
     url = tile_source.replace(
@@ -40,7 +40,7 @@ def merge_tiles(tiles, output_path):
 def georeference_raster_tile(x, y, z, path):
     tile = os.path.join(cache_dir, f'{cache_dir}/{x}_{y}_{z}.tif')
 
-    if not os.path.exists(path):
+    if not os.path.exists(tile):
         bounds = tile_edges(x, y, z)
         gdal.Translate(tile,
                     path,
@@ -78,8 +78,6 @@ def convert(tile_source, output_file, bounding_box, zoom):
                 pass
 
     print("Resolving and georeferencing of raster tiles complete")
-
-
 
     print("Merging tiles")
     merge_tiles(tiles, output_file)
