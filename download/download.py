@@ -19,7 +19,7 @@ if __name__=="__main__":
 
     a.add_argument("--width", "-w", help="Width of the bounding box, in degrees", type=float, default=config['bbox']['width'])
     a.add_argument("--height", "-h", help="Height of the bounding box, in degrees", type=float, default=config['bbox']['height'])
-    a.add_argument("--output", "-o", help="Output folder", default=config['output'])
+    a.add_argument("--output", "-o", help="Output file", default=config['output'])
     a.add_argument("--url", "-u", help="URL of the map tile server, with {x}, {y} and {z} variables", default=config['url'])
     a.add_argument("--zoom", "-z", help="Zoom level", type=int, default=config['zoom'])
 

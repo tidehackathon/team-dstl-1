@@ -2,4 +2,4 @@ __pycache__/
 cache/
 output/
 config.json
-merged.tif
+*.tif

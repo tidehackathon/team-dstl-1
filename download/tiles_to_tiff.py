@@ -1,7 +1,5 @@
 import urllib.request
 import os
-import glob
-import shutil
 from tile_convert import bbox_to_xyz, tile_edges
 from osgeo import gdal
 
@@ -33,9 +31,9 @@ def fetch_tile(x, y, z, tile_source):
     return path
 
 
-def merge_tiles(input_pattern, output_path):
+def merge_tiles(tiles, output_path):
     vrt_path = cache_dir + "/tiles.vrt"
-    gdal.BuildVRT(vrt_path, glob.glob(input_pattern))
+    gdal.BuildVRT(vrt_path, tiles)
     gdal.Translate(output_path, vrt_path)
 
 
@@ -48,34 +46,41 @@ def georeference_raster_tile(x, y, z, path):
                     path,
                     outputSRS='EPSG:4326',
                     outputBounds=bounds)
+    
+    return tile
 
-def convert(tile_source, output_dir, bounding_box, zoom): 
+def convert(tile_source, output_file, bounding_box, zoom): 
     lon_min, lat_min, lon_max, lat_max = bounding_box
 
     # Script start:
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
 
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    if not os.path.exists(os.path.dirname(output_file)):
+        os.makedirs(os.path.dirname(output_file))
 
     x_min, x_max, y_min, y_max = bbox_to_xyz(
         lon_min, lon_max, lat_min, lat_max, zoom)
 
     print(f"Fetching & georeferencing {(x_max - x_min + 1) * (y_max - y_min + 1)} tiles")
 
+    tiles = []
     for x in range(x_min, x_max + 1):
         for y in range(y_min, y_max + 1):
             try:
                 png_path = fetch_tile(x, y, zoom, tile_source)
                 print(f"{x},{y} fetched")
-                georeference_raster_tile(x, y, zoom, png_path)
+                tile = georeference_raster_tile(x, y, zoom, png_path)
+
+                tiles.append(tile)
             except OSError:
                 print(f"Error, failed to get {x},{y}")
                 pass
 
     print("Resolving and georeferencing of raster tiles complete")
 
+
+
     print("Merging tiles")
-    merge_tiles(cache_dir + '/*.tif', output_dir + '/merged.tif')
+    merge_tiles(tiles, output_file)
     print("Merge complete")
