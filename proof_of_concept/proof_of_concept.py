@@ -1,5 +1,7 @@
 import argparse
 import json
+import numpy as np
+import rasterio
 import simplekml
 import sys
 import time
@@ -9,6 +11,9 @@ import extract
 
 sys.path.append('../download')
 import tiles_to_tiff as t3
+
+sys.path.append('../mapping') 
+import find_drone_coords as fdc
 
 sys.path.append('../offset_correction')
 import offset_correction
@@ -96,11 +101,11 @@ if __name__=="__main__":
 
         # TODO: Rectify the images
 
-        # TODO: Get location via neural network
-        nn_location = (0, 0)
+        # Get location via neural network
+        (pred_lat, pred_lon), = fdc.drone_image_to_coords(np.asarray(image), rasterio.open("./merged.tif"))
 
-        # TODO: Calculate offset to drone location
-        corrected_location = (0, 0)
+        # Calculate offset to drone location
+        corrected_location = offset_correction.correct_offset(pred_lat, pred_lon)
 
         # Save offset location into predicted
         predicted.append(corrected_location)
