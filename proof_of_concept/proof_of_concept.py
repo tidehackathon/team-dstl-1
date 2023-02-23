@@ -49,6 +49,7 @@ if __name__=="__main__":
     start_time = time.time()
 
     ground_truth = [(start_lon, start_lat)]
+    raw_predicted = [(start_lon, start_lat)]
     predicted = [(start_lon, start_lat)]
     time_offsets = [0]
 
@@ -63,7 +64,11 @@ if __name__=="__main__":
     gt_line.style.linestyle.color = simplekml.Color.green
     gt_line.style.linestyle.width = 10
 
-    pred_line = kml.newlinestring(name="Predicted", coords=predicted)
+    raw_pred_line = kml.newlinestring(name="Predicted (Uncorrected)", coords=raw_predicted)
+    raw_pred_line.style.linestyle.color = simplekml.Color.blue
+    raw_pred_line.style.linestyle.width = 10 
+
+    pred_line = kml.newlinestring(name="Predicted (Corrected)", coords=predicted)
     pred_line.style.linestyle.color = simplekml.Color.red
     pred_line.style.linestyle.width = 10
 
@@ -102,7 +107,8 @@ if __name__=="__main__":
         # TODO: Rectify the images
 
         # Get location via neural network
-        (pred_lat, pred_lon), = fdc.drone_image_to_coords(np.asarray(image), rasterio.open("./merged.tif"))
+        pred_lat, pred_lon = fdc.drone_image_to_coords(np.asarray(image), rasterio.open("./merged.tif"))
+        raw_predicted.append((pred_lon, pred_lat))
 
         # Calculate offset to drone location
         corrected_lat, corrected_lon = offset_correction.correct_offset(pred_lat, pred_lon, drone_metadata["heading"], drone_metadata["pitch"], drone_metadata["roll"], drone_metadata["altitude"], config["ground_altitude"], pred_lat, drone_metadata["camera_a"], drone_metadata["camera_b"], drone_metadata["camera_c"])
@@ -116,5 +122,6 @@ if __name__=="__main__":
         
         # Save ground truth/prediction to KML
         gt_line.coords = ground_truth
+        raw_pred_line.coords = raw_predicted
         pred_line.coords = predicted
         kml.save("output.kml")

@@ -13,8 +13,11 @@ from distance_compare import *
 
 
 class ProcessImagesSiamese(nn.Module):
-    def __init__(self, model_path='models/landcoversiamese_augmented100_0.4630853235721588.pt'):
+    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented100_0.4630853235721588.pt'):
         super().__init__()
+
+        device = 'cuda'
+
         model = LandSiamese()
         model.load_state_dict(torch.load(model_path))
         model.to(device)
@@ -22,6 +25,8 @@ class ProcessImagesSiamese(nn.Module):
         self.model.eval()
 
     def __call__(self, patch_img, patch):
+        device = 'cuda'
+
         patch_img = F.resize(patch_img, [512, 512])
         patch = F.resize(patch.unsqueeze(0), [512, 512])
         patch_img = self.model.forward_one(patch_img.unsqueeze(0).to(device)).squeeze().to('cpu')
@@ -82,7 +87,8 @@ def drone_image_to_coords(drone_image, map, patch_size=512, stride_size=128, wei
     ymap = predy*stride_size+(0.5*patch_size)
     x, y = map.xy(ymap, xmap)
 
-    return (y, x), patches[0, 0, predy, predx]
+    #return (y, x), patches[0, 0, predy, predx]
+    return (y, x)
 
 
 if __name__ == '__main__':
