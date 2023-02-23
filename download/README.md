@@ -20,7 +20,7 @@ The following provides an example `config.json` using MapTiler as the tile sourc
         "height": 0.05
     },
     "url": "https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=KEY"
-    "output": ".",
+    "output": "./merged_tiles.tif",
     "zoom": 16
 }
 ```
@@ -36,7 +36,7 @@ The following additional command line options can be provided, and will override
 | Short Option | Long Option | Description |
 | ------------ | ----------- | ----------- |
 | -h | --height | Height of the bounding box in degrees |
-| -o | --output | Output folder |
+| -o | --output | Output file |
 | -u | --url | URL of the map tile server, with {x}, {y} and {z} variables |
 | -w | --width | Width of the bounding box in degrees |
 | -z | --zoom | Zoom level |
