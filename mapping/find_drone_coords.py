@@ -13,7 +13,7 @@ from distance_compare import *
 
 
 class ProcessImagesSiamese(nn.Module):
-    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented100_0.4630853235721588.pt'):
+    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented150_0.5088110566139221.pt'):
         super().__init__()
 
         device = 'cuda'
@@ -33,7 +33,7 @@ class ProcessImagesSiamese(nn.Module):
         patch = self.model.forward_one(patch.unsqueeze(0).to(device)).squeeze().to('cpu')
         return patch_img, patch
 
-def drone_image_to_coords(drone_image, map, patch_size=512, stride_size=128, weighting=None):
+def drone_image_to_coords(drone_image, map, patch_size=512, stride_size=128, weighting=None, return_patches=False, process_images=ProcessImagesSiamese()):
     '''
     Input:
         - drone_image: numpy array image
@@ -66,7 +66,7 @@ def drone_image_to_coords(drone_image, map, patch_size=512, stride_size=128, wei
     drone_patches = [patch_img1, patch_img2, patch_img3]
 
     # model image processing class
-    process_images = ProcessImagesSiamese()
+    # process_images = ProcessImagesSiamese()
 
     # dist func returns pooled predictions
     predx, predy, distances, patches = find_closest_dist(
@@ -87,8 +87,10 @@ def drone_image_to_coords(drone_image, map, patch_size=512, stride_size=128, wei
     ymap = predy*stride_size+(0.5*patch_size)
     x, y = map.xy(ymap, xmap)
 
-    #return (y, x), patches[0, 0, predy, predx]
-    return (y, x)
+    if return_patches:
+        return (y, x), patches[0, 0, predy, predx]
+    else:
+        return (y, x)
 
 
 if __name__ == '__main__':
@@ -101,7 +103,7 @@ if __name__ == '__main__':
         drone_image = cv2.imread(os.path.join(IMG_DIR, drone_image_name))
         map = rasterio.open('google-35_107470-48_571642.tiff')
 
-        coords, predicted_patch = drone_image_to_coords(drone_image, map, patch_size=526, stride_size=32)
+        coords, predicted_patch = drone_image_to_coords(drone_image, map, patch_size=256, stride_size=256, return_patches=True)
         # 768, 256
 
         print(f'Predicted co-ordinates for image {drone_image_name[-7:-5]}: ', coords)
