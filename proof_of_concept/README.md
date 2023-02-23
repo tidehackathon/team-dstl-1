@@ -16,6 +16,8 @@ For example:
 python3 proof_of_concept.py "/home/james/data/videos/sample5/2019-09-10 16-18-38.tlog" "/home/james/data/videos/sample5/full_video.mp4" 1568122126
 ```
 
+You can add an option `--start_offset` argument, which specifies a number of seconds into the video at which replay should start.
+
 ## Configuration
 
 A configuration file is required. An example is below:

@@ -38,20 +38,21 @@ if __name__=="__main__":
     a.add_argument("logfile", help="Path to telemetry log file")
     a.add_argument("video", help="Path to video file")
     a.add_argument("offset", help="Unix timestamp (in UTC) of the start of the video", type=float)
+    a.add_argument("--start_offset", help="Offset to start video/log replay (in seconds)", type=float, default=0, required=False)
 
     args = a.parse_args()
 
     # Extract first frame and geolocation, assuming this is where we lose GPS
-    start_lat, start_lon = get_start_location(args.logfile, args.offset)
+    start_lat, start_lon = get_start_location(args.logfile, args.offset + args.start_offset)
 
     print(f"Start location: {start_lat}, {start_lon}")
 
-    start_time = time.time()
+    start_time = time.time() - args.start_offset
 
     ground_truth = [(start_lon, start_lat)]
     raw_predicted = [(start_lon, start_lat)]
     predicted = [(start_lon, start_lat)]
-    time_offsets = [0]
+    time_offsets = [args.start_offset]
 
     # Create empty output CSV
     with open("output.csv", "w") as f:
