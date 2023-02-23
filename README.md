@@ -51,11 +51,11 @@ The following are a list of caveats and known limitations to our approach:
 * Our approach is likely to work best on "feature rich" areas where there are lots of features within the imagery to match to the reference map. This could be roads, buildings, waterways, field boundaries or any other unique feature. Where the image is very generic (e.g. a large empty field, or a single straight road with no other features) then the approach will struggle. However, as errors don't propagate with our approach, as soon as there are discernible features the approach will be able to locate the drone again regardless of the loss of location.
 * Our solution is currently limited by the amount of time and data we had available to train the model. We have provided the code to train new models, and with more time and some targeted data collection this would likely significantly improve performance.
 
-### Future Work
+## Future Work
 
 The following is a list of ideas for improving the approach further in the future:
 
-* Rectification of images (i.e. correcting for perspective) prior to feeding them into the neural network as described [here](orthorectification/README.md) in the `orthorectification` folder
+* Rectification of images (i.e. correcting for perspective) prior to feeding them into the neural network - see `orthorectification` folder [here](orthorectification/README.md).
 * Improving the training data to include a wider range of perspectives and weather conditions
 * Model is currently only trained on aerial imagery, as there was no suitable dataset of drone imagery linked to aerial imagery. If this data set can be found or built, then this would likely significantly improve the model quality. The model training code would need some small changes to support this. This is described [here](mapping/README.md) in the `mapping` folder.
 * Context injection as described in it's [folder](context_injection/README.md) to supplement the visual information with input from the other sensors on the drone.
@@ -71,4 +71,4 @@ We looked at trying to simplify the images by segmenting them into land cover us
 
 ### Visual Inertial Navigation and SLAM (Simultaneous Localisation and Mapping)
 
-We briefly looked at getting some existing Visual Inertial Navigation and SLAM tools running, with the idea of feeding our data in and seeing what we could get out of them. However, they proved difficult to get working on our laptops and once we had it wasn't easy to feed our data into them tools so we decided to abandon this approach.
+We briefly looked at getting some existing Visual Inertial Navigation and SLAM tools running, with the idea of feeding our data in and seeing what we could get out of them. However, they proved difficult to get working on our laptops and once we had it wasn't easy to feed our data into them tools so we decided to abandon this approach. Some details of these methods can be found in the `vio_and_slam` folder [here](vio_and_slam/README.md).
