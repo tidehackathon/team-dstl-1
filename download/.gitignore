@@ -3,3 +3,4 @@ cache/
 output/
 config.json
 *.tif
+cache*/

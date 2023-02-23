@@ -3,6 +3,8 @@ import torch
 import torchvision
 from tqdm import tqdm
 import os
+import argparse
+
 
 from landcoversiamese import *
 
@@ -13,6 +15,7 @@ def train_triplet(model, dataloader, criterion, device, num_epochs=100, lr=1e-4,
     model = model.to(device)
     model.train()
     for epoch in range(num_epochs):
+        print(epoch)
         optimizer.zero_grad()
         epoch_loss = 0
         # get data
@@ -35,10 +38,17 @@ def train_triplet(model, dataloader, criterion, device, num_epochs=100, lr=1e-4,
             optimizer.step()
         scheduler.step()
         print(epoch_loss)
+        print()
 
-        if epoch%25==0:
-            # this is a save rather than a checkpoint
-            torch.save(model.state_dict(), os.path.join(save_path, f'landcoversiamese_augmented{num_epochs}_{loss}.pt'))
+        if (epoch+1)%10==0:
+            # checkpoint
+            save = os.path.join(save_path, f'landcoversiamese_augmented_checkpoint{epoch}_{loss}.pt')
+            torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': loss,
+            }, save)
 
 
     # save model 
@@ -53,25 +63,35 @@ def transforms(anchor, pos, neg):
                     torchvision.transforms.RandomEqualize(p=0.25),
                     torchvision.transforms.ColorJitter(brightness=0.5, contrast=0.2),
                     )
-    anchor = T(anchor)
+    anchor = anchor
     pos = T(pos)
     neg = T(neg)
     return anchor, pos, neg
 
 if __name__=='__main__':
-    DATA_FOLDER = 'landcover.ai.v1'
-    MARGIN = 1
+    # args to change here
+    DATA_FOLDER = '../mapping/landcover.ai.v1'
+    MARGIN = 10
     LR = 1e-4
     NUM_EPOCHS = 100
-    SAVE_PATH = 'models'
+    SAVE_PATH = '../mapping/models/add_models'
+
+
 
     data = LandcoverAITriplet(DATA_FOLDER)
-    dataloader = torch.utils.DataLoader(data, batch_size=32, shuffle=True)
+    dataloader = torch.utils.data.DataLoader(data, batch_size=32, shuffle=True)
     model = LandSiamese()
     criterion = torch.nn.TripletMarginLoss(margin=MARGIN)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(device)
 
-    train_triplet(model, dataloader, criterion, device, num_epochs=NUM_EPOCHS, lr=LR, margin=1, save_path=SAVE_PATH)
-
+    train_triplet(model,
+                dataloader,
+                criterion,
+                device,
+                num_epochs=NUM_EPOCHS,
+                lr=LR,
+                margin=1,
+                save_path=SAVE_PATH,
+                )
