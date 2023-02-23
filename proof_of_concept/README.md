@@ -33,3 +33,12 @@ A configuration file is required. An example is below:
     "zoom": 16
 }
 ```
+
+## Outputs
+
+The proof of concept produces two outputs:
+
+1) A CSV file (`output.csv`) containing the Ground Truth and Predicted locations.
+2) A KML file (`output.kml`) containing tracks for the Ground Truth, Uncorrected Predicted locations (the raw output from the model) and the Corrected Predicted locations (the outputs corrected for camera attitude).
+
+You can get a live updating view in Google Earth Pro by adding the KML as a Network Link, and the setting a Refresh Rate to a few seconds. The model tends to take ~15-20 seconds to process a frame, so there will only be occasional updates. The proof of concept tool processes the input in "real time" - so if it takes 20 seconds to process a frame, the next frame it processes will be 20 seconds later (rather than the next frame).
