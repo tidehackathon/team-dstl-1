@@ -13,7 +13,7 @@ from distance_compare import *
 
 
 class ProcessImagesSiamese(nn.Module):
-    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented150_0.5088110566139221.pt'):
+    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented100_0.4630853235721588.pt'):
         super().__init__()
 
         device = 'cuda'

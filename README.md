@@ -57,6 +57,7 @@ The following is a list of ideas for improving the approach further in the futur
 
 * Rectification of images (i.e. correcting for perspective) prior to feeding them into the neural network
 * Improving the training data to include a wider range of perspectives and weather conditions
+* Model is currently only trained on aerial imagery, as there was no suitable dataset of drone imagery linked to aerial imagery. If this data set can be found or built, then this would likely significantly improve the model quality. The model training code would need some small changes to support this.
 
 ## Other Attempted Approaches
 

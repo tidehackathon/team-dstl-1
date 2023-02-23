@@ -2,8 +2,6 @@
 import cv2
 import os
 import numpy as np
-import torch
-import torchvision
 import random
 from torch import nn
 from torch.utils.data import Dataset
