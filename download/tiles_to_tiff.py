@@ -27,6 +27,9 @@ def fetch_tile(x, y, z, tile_source):
         g = urllib.request.urlopen(req)
         with open(path, 'b+w') as f:
             f.write(g.read())
+        
+        print(f"{x},{y} fetched")
+
     
     return path
 
@@ -69,7 +72,6 @@ def convert(tile_source, output_file, bounding_box, zoom):
         for y in range(y_min, y_max + 1):
             try:
                 png_path = fetch_tile(x, y, zoom, tile_source)
-                print(f"{x},{y} fetched")
                 tile = georeference_raster_tile(x, y, zoom, png_path)
 
                 tiles.append(tile)

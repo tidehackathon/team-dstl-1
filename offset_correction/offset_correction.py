@@ -1,37 +1,40 @@
 import numpy as np
 import math
+from scipy.spatial.transform import Rotation
 
-def correct_offset(uncorrected_lat, uncorrected_lon, heading, pitch, roll, altitude, altitude_offset, latitude, a, b, c):
-    # Altitude sensor is meters above sea level
-    # Relative altitude subtracts average elevation (could use a dem)
+def correct_offset_rot(uncorrected_lat, uncorrected_lon, yaw, pitch, roll, altitude, altitude_offset, a, b, c):
+    # Altitude
     relative_altitude = altitude - altitude_offset
+
+    # Camera Attitude
     camera_pitch = a / 100
     camera_roll = b / 100
     camera_yaw = np.fmod((c / 100), 360)
 
-    # The camera's attitude is relative to the platform
-    combined_pitch = pitch + math.radians(camera_pitch)
-    #combined_roll = roll + math.radians(camera_roll)
-    combined_heading = heading + camera_yaw
+    # Rotations
+    platform_rotation = Rotation.from_euler('ZYX', (yaw, pitch, roll))
+    sensor_rotation = Rotation.from_euler('ZYX', (camera_yaw, camera_pitch, camera_roll), degrees=True)
 
-    # Calculate theta (pitch relative to vertical down)
+    # Combine rotations
+    platform_sensor_rotation = (platform_rotation*sensor_rotation).inv().as_matrix()
+
+    # Extract combined yaw-pitch-roll
+    r = Rotation.from_matrix(platform_sensor_rotation)
+    combined_angles = r.as_euler("zyx")
+
+    combined_yaw = combined_angles[0]
+    combined_pitch = combined_angles[1]
+
+    # Calculate magnitude
     theta = (math.pi / 2) - combined_pitch
-
-    # Calculate magnitude of correction in meters (Pythagoras)
     correction_magnitude_meters = relative_altitude * math.tan(theta)
-
-    # We need to translate the predicted location in the opposite direction to heading
-    # Remember to modulo 360 
-    correction_direction = (combined_heading + 180) % 360
-
-    # Approximation of meters in WGS84
-    meter_as_dec_degrees = (1/111111) / math.cos(math.radians(latitude))
-
+    meter_as_dec_degrees = (1/111111) / math.cos(math.radians(uncorrected_lat))
     correction_magnitude_degrees = correction_magnitude_meters * meter_as_dec_degrees
 
-    # We need the vector components of heading and magnitude, this deviates from most formulae
-    # Because 0 degrees is x=0 y=1 and degrees increase clockwise, unlike standard cartesians coords
-    # x, y = mag * sin(heading), mag * cos(heading)
+    # Calculate direction
+    correction_direction = (combined_yaw + 180) % 360
+
+    # Calculate corrected lat-lon
     lat_correction = correction_magnitude_degrees * math.cos(correction_direction)
     lon_correction = correction_magnitude_degrees * math.sin(correction_direction)
 

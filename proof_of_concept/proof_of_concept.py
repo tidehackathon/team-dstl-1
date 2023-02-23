@@ -49,6 +49,7 @@ if __name__=="__main__":
     start_time = time.time()
 
     ground_truth = [(start_lon, start_lat)]
+    raw_predicted = [(start_lon, start_lat)]
     predicted = [(start_lon, start_lat)]
     time_offsets = [0]
 
@@ -60,10 +61,14 @@ if __name__=="__main__":
     # Create empty KML
     kml = simplekml.Kml(name='Proof of Concept')
     gt_line = kml.newlinestring(name="Ground Truth", coords=ground_truth)
-    gt_line.style.linestyle.color = simplekml.Color.green
+    gt_line.style.linestyle.color = simplekml.Color.limegreen
     gt_line.style.linestyle.width = 10
 
-    pred_line = kml.newlinestring(name="Predicted", coords=predicted)
+    raw_pred_line = kml.newlinestring(name="Predicted (Uncorrected)", coords=raw_predicted)
+    raw_pred_line.style.linestyle.color = simplekml.Color.blue
+    raw_pred_line.style.linestyle.width = 10 
+
+    pred_line = kml.newlinestring(name="Predicted (Corrected)", coords=predicted)
     pred_line.style.linestyle.color = simplekml.Color.red
     pred_line.style.linestyle.width = 10
 
@@ -102,10 +107,14 @@ if __name__=="__main__":
         # TODO: Rectify the images
 
         # Get location via neural network
-        (pred_lat, pred_lon), = fdc.drone_image_to_coords(np.asarray(image), rasterio.open("./merged.tif"))
+        patch_size = int(config.get("patch_size", 512))
+        stride_size = int(config.get("stride_size", patch_size / 4))
 
-        # Calculate offset to drone location
-        corrected_lat, corrected_lon = offset_correction.correct_offset(pred_lat, pred_lon, drone_metadata["heading"], drone_metadata["pitch"], drone_metadata["roll"], drone_metadata["altitude"], config["ground_altitude"], pred_lat, drone_metadata["camera_a"], drone_metadata["camera_b"], drone_metadata["camera_c"])
+        pred_lat, pred_lon = fdc.drone_image_to_coords(np.asarray(image), rasterio.open("./merged.tif"), patch_size=patch_size, stride_size=stride_size)
+        raw_predicted.append((pred_lon, pred_lat))
+
+        # Calculate offset to drone location - use heading not yaw for platform so it's relative to N
+        corrected_lat, corrected_lon = offset_correction.correct_offset_rot(pred_lat, pred_lon, drone_metadata["heading"], drone_metadata["pitch"], drone_metadata["roll"], drone_metadata["altitude"], config["ground_altitude"], drone_metadata["camera_a"], drone_metadata["camera_b"], drone_metadata["camera_c"])
 
         # Save offset location into predicted
         predicted.append((corrected_lon, corrected_lat))
@@ -116,5 +125,6 @@ if __name__=="__main__":
         
         # Save ground truth/prediction to KML
         gt_line.coords = ground_truth
+        raw_pred_line.coords = raw_predicted
         pred_line.coords = predicted
         kml.save("output.kml")
