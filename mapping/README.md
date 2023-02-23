@@ -53,7 +53,7 @@ The negative patch image is picked from an another random patch in the image and
 
 This could be easily added to for custom data of that same format as these images, additional large files from satellite images can be added to the data containing folder.
 
-#### Training with custom data
+##### Training with custom data
 
 Training with data of a different format, such as drone and corresponding satellite images will require a different [torch dataset](https://pytorch.org/tutorials/beginner/data_loading_tutorial.html). The model expects single channel greyscale images. The rest of the training code and the model architecture should work as written after this.
 Pseudocode:
