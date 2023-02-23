@@ -42,7 +42,7 @@ def train_triplet(model, dataloader, criterion, device, num_epochs=100, lr=1e-4,
 
         if (epoch+1)%10==0:
             # checkpoint
-            save_path = os.path.join(save_path, f'landcoversiamese_augmented_checkpoint{num_epochs}_{loss}.pt')
+            save_path = os.path.join(save_path, f'landcoversiamese_augmented_checkpoint{epoch}_{loss}.pt')
             torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
@@ -86,5 +86,12 @@ if __name__=='__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(device)
 
-    train_triplet(model, dataloader, criterion, device, num_epochs=NUM_EPOCHS, lr=LR, margin=1, save_path=SAVE_PATH)
-
+    train_triplet(model,
+                dataloader,
+                criterion,
+                device,
+                num_epochs=NUM_EPOCHS,
+                lr=LR,
+                margin=1,
+                save_path=SAVE_PATH,
+                )
