@@ -61,7 +61,7 @@ if __name__=="__main__":
     # Create empty KML
     kml = simplekml.Kml(name='Proof of Concept')
     gt_line = kml.newlinestring(name="Ground Truth", coords=ground_truth)
-    gt_line.style.linestyle.color = simplekml.Color.green
+    gt_line.style.linestyle.color = simplekml.Color.limegreen
     gt_line.style.linestyle.width = 10
 
     raw_pred_line = kml.newlinestring(name="Predicted (Uncorrected)", coords=raw_predicted)
