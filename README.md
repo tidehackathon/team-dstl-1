@@ -55,9 +55,11 @@ The following are a list of caveats and known limitations to our approach:
 
 The following is a list of ideas for improving the approach further in the future:
 
-* Rectification of images (i.e. correcting for perspective) prior to feeding them into the neural network
+* Rectification of images (i.e. correcting for perspective) prior to feeding them into the neural network as described [here](orthorectification/README.md) in the `orthorectification` folder
 * Improving the training data to include a wider range of perspectives and weather conditions
-* Model is currently only trained on aerial imagery, as there was no suitable dataset of drone imagery linked to aerial imagery. If this data set can be found or built, then this would likely significantly improve the model quality. The model training code would need some small changes to support this.
+* Model is currently only trained on aerial imagery, as there was no suitable dataset of drone imagery linked to aerial imagery. If this data set can be found or built, then this would likely significantly improve the model quality. The model training code would need some small changes to support this. This is described [here](mapping/README.md) in the `mapping` folder.
+* Context injection as described in it's [folder](context_injection/README.md) to supplement the visual information with input from the other sensors on the drone.
+* With increased training data and time a Vision transformer could be trained for this task instead of the siamese network; this is how the state of the art methods approach the problem. This would however increase the hardware requirements beyond what is likely feasible for a drone.
 
 ## Other Attempted Approaches
 
