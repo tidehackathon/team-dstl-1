@@ -10,7 +10,7 @@ For this application, we recommend applying context injection by concatenating a
 Answering this question is very difficult unless you are a subject matter expert, there a slight physical differences unknown to most people. However, when given a population heatmap for each species and a geo reference of the image, it is easy to make an educated guess. This is the broad concept of context injection.
 ![](heatmap.png)
 
-## Example architecture concatenating context vector with convolutional layers:
+## Example architecture concatenating context vector with convolutional layers
 ![](early_concat.png)
 
 ## Example architecture concatenating context vector with baseline model's feature vector: 

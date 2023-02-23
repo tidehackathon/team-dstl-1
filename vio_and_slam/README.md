@@ -10,8 +10,7 @@ The most promising library we found to do VIO is https://github.com/rpng/open_vi
 
 ## SLAM
 
-Simultaneous Localisation and Mapping (SLAM) is the term used to refer to this common problem in robotics. Specifically we are dealing with a monocular From our research we conclude that these techniques will have low performance in the outdoor drone task as the algorithms expect dense features to register points against, such as doors, windows and furniture in an indoor scene.
+Simultaneous Localisation and Mapping (SLAM) is the term used to refer to this common problem in robotics. Specifically we are dealing with a monocular visual SLAM. From our research we conclude that these techniques will have low performance in the outdoor drone task as the algorithms expect dense features to register points against, such as doors, windows and furniture in an indoor scene. The performance of these techniques may be significantly improved if the drone was fitted with an inexpensive RGB-D depth sensor, such as those found on modern smartphones. 
 
-[Map2DFusion](https://github.com/zdzhaoyong/Map2DFusion) 
+More information on SLAM can be found at: https://www.mathworks.com/help/vision/ug/monocular-visual-simultaneous-localization-and-mapping.html. 
 
-![](./map2dfusion.gif)
