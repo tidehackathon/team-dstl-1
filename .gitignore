@@ -56,3 +56,7 @@ mapping/landcover.ai.v1/
 mapping/TIERS/
 mapping/__pycache__/
 mapping/env/
+mapping/*.tiff
+
+# ignore extra models
+mapping/models/add_models/
