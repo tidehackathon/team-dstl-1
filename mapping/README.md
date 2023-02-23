@@ -12,6 +12,9 @@ The triplet loss function is then used to train the model. This is an unsupervis
 
 During inference the map image is sliced into overlapping patches and the one most similar to the drone footage still is predicted. The location of the centre pixel of this patch is then located and returned.
 
+![Example of model output](example_images/example_0.png)
+Drone image, Predicted patch from model, Satellite image fed to model, Heatmap of model's predicted locations
+
 ### Requirements
 pytorch, torchvision, torchgeo, cv2, tqdm
 
