@@ -4,5 +4,6 @@ The sample videos do not start at the same point in time as the telemetry logs. 
 
 | Sample | Video | Offset |
 | ------------ | ----------- | ----------- |
+| 2 | sample2a-gimbal.mov | 1475753728 |
 | 4 | full_video.mp4 | 1547031606 |
 | 5 | full_video.mp4 | 1568122126 |
