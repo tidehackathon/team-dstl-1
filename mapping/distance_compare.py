@@ -42,7 +42,7 @@ def find_closest_dist(map_img, patch_imgs, patch_size=256, stride_size=128, proc
                     distances[n, j, i] = dist
     
     # sum distances over first axis
-    distances = torch.prod(distances, 0)
+    distances = torch.sum(distances, 0)
     # identify closest
     amin = distances.argmin()
     predx = amin%num_images_x
