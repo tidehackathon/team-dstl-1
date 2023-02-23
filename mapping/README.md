@@ -12,6 +12,9 @@ The triplet loss function is then used to train the model. This is an unsupervis
 
 During inference the map image is sliced into overlapping patches and the one most similar to the drone footage still is predicted. The location of the centre pixel of this patch is then located and returned.
 
+![Example of model output](example_images/example_0.png)
+Drone image, Predicted patch from model, Satellite image fed to model, Heatmap of model's predicted locations
+
 ### Requirements
 pytorch, torchvision, torchgeo, cv2, tqdm
 
@@ -47,3 +50,26 @@ network used is the LandSiamese defined in landcoversiamese.py file
 
 The training data is the [LandCover.ai](https://landcover.ai.linuxpolska.com/) datasets orthophotos. These are large satellite image patches. During training a random patch is selected from these and assigned as the anchor. The same patch is then transformed and deformed to make the positive patch image.
 The negative patch image is picked from an another random patch in the image and also deformed. These three images then make one training example. The model is taught to push the embeddings of the positive image and the anchor closer together whilst moving the negative image and the anchor further apart.
+
+This could be easily added to for custom data of that same format as these images, additional large files from satellite images can be added to the data containing folder.
+
+#### Training with custom data
+
+Training with data of a different format, such as drone and corresponding satellite images will require a different [torch dataset](https://pytorch.org/tutorials/beginner/data_loading_tutorial.html). The model expects single channel greyscale images. The rest of the training code and the model architecture should work as written after this.
+Pseudocode:
+```python
+class DroneSatData(torch.utils.data.Dataset):
+    def __init__(self, training_dir):
+        pass
+    
+    def __len__(self):
+        return len(training_set)
+
+    def __getitem__(self, idx):
+        timestamp, location = data[idx]
+        anchor = sat_image_patch_corresponding_to_drone_location
+        positive = image_from_drone_footage_at_that_moment
+        negative = image_from_drone_footage_at_another_moment
+        
+        return anchor, positive, negative
+```
