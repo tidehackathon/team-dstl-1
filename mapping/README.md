@@ -63,9 +63,10 @@ class DroneSatData(torch.utils.data.Dataset):
         return len(training_set)
 
     def __getitem__(self, idx):
-        anchor = sat image patch corresponding to drone location
-        positive = image from drone footage at that moment
-        negative = image from drone footage at another moment
+        timestamp, location = data[idx]
+        anchor = sat_image_patch_corresponding_to_drone_location
+        positive = image_from_drone_footage_at_that_moment
+        negative = image_from_drone_footage_at_another_moment
         
         return anchor, positive, negative
 ```
