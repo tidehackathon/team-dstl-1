@@ -18,6 +18,8 @@ def extract_metadata(log, extract):
             if timestamp > extract:
                 break
 
+            extract_dict['timestamp'] = timestamp
+
             if isinstance(m, mavutil.mavlink.MAVLink_vfr_hud_message):
                 extract_dict['heading'] = m.heading
                 extract_dict['altitude'] = m.alt

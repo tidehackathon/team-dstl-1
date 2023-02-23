@@ -1,4 +1,5 @@
 import argparse
+from datetime import datetime
 import json
 import numpy as np
 import rasterio
@@ -92,6 +93,8 @@ if __name__=="__main__":
         if image is None:
             print("Ran out of video data")
             break
+
+        print(f"Timestamp: {datetime.fromtimestamp(drone_metadata['timestamp']).isoformat()}")
 
         # Save ground truth location
         ground_truth.append((logfile_coord_to_dec(drone_metadata["_lon"]), logfile_coord_to_dec(drone_metadata["_lat"])))
