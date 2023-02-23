@@ -20,6 +20,7 @@ def extract_metadata(log, extract):
 
             if isinstance(m, mavutil.mavlink.MAVLink_vfr_hud_message):
                 extract_dict['heading'] = m.heading
+                extract_dict['altitude'] = m.alt
             elif isinstance(m, mavutil.mavlink.MAVLink_attitude_message):
                 extract_dict['yaw'] = m.yaw
                 extract_dict['pitch'] = m.pitch
