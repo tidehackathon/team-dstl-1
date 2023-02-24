@@ -15,10 +15,10 @@ from distance_compare import *
 
 class ProcessImagesSiamese(nn.Module):
     '''Class to process images and patches with using the Siamese model'''
-    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented150_0.5088110566139221.pt', device='cuda'):
+    def __init__(self, model_path='../mapping/models/landcoversiamese_augmented_nth_hour_model.pt', device='cuda'):
         '''Initiates a LandSiamese model from the given model path and the device to send the model to.
         Input:
-            - model_path='../mapping/models/landcoversiamese_augmented150_0.5088110566139221.pt',
+            - model_path='../mapping/models/landcoversiamese_augmented_nth_hour_model.pt',
             - device='cuda'
         '''
         super().__init__()
